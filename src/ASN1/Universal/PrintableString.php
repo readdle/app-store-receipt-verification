@@ -5,7 +5,7 @@ namespace Readdle\AppStoreReceiptVerification\ASN1\Universal;
 
 use Readdle\AppStoreReceiptVerification\ASN1\AbstractASN1Object;
 
-final class PrintableString  extends AbstractASN1Object
+final class PrintableString extends AbstractASN1Object
 {
     protected string $value = '';
 
