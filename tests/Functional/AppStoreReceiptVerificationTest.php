@@ -34,7 +34,7 @@ final class AppStoreReceiptVerificationTest extends TestCase
                 );
             } catch (Exception $e) {
                 ob_end_clean();
-                continue;
+                $this->fail("[$filename]: {$e->getMessage()}");
             }
 
             file_put_contents($pathToSamples . DIRECTORY_SEPARATOR . "receipt{$m[1]}.json", ob_get_clean());

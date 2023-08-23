@@ -34,10 +34,26 @@ final class ReceiptContainerVerifier
 
     private function verifyCertificatesChain(): bool
     {
+        $signedAt = $this->receiptContainer
+            ->getReceipt()
+            ->getFieldByType(AppReceiptField::TYPE__RECEIPT_CREATION_DATE)
+            ->getValue()
+        ;
+
+        if (empty($signedAt)) {
+            $signedAt = $this->receiptContainer
+                ->getReceipt()
+                ->getFieldByType(AppReceiptField::TYPE__REQUEST_DATE)
+                ->getValue()
+            ;
+        }
+
+        if (empty($signedAt)) {
+            return false;
+        }
+
         try {
-            $receiptCreationDateTime = new DateTimeImmutable($this->receiptContainer->getReceipt()->getFieldByType(
-                AppReceiptField::TYPE__RECEIPT_CREATION_DATE
-            )->getValue());
+            $signDateTime = new DateTimeImmutable($signedAt);
         } catch (Exception $e) {
             return false;
         }
@@ -52,8 +68,8 @@ final class ReceiptContainerVerifier
             $validity = $signedCertificate->getCertificate()->getValidity();
 
             if (
-                $receiptCreationDateTime < $validity->getNotBefore()
-                || $receiptCreationDateTime > $validity->getNotAfter()
+                $signDateTime < $validity->getNotBefore()
+                || $signDateTime > $validity->getNotAfter()
             ) {
                 return false;
             }
