@@ -36,17 +36,9 @@ final class ReceiptContainerVerifier
     {
         $signedAt = $this->receiptContainer
             ->getReceipt()
-            ->getFieldByType(AppReceiptField::TYPE__RECEIPT_CREATION_DATE)
+            ->getFieldByType(AppReceiptField::TYPE__REQUEST_DATE)
             ->getValue()
         ;
-
-        if (empty($signedAt)) {
-            $signedAt = $this->receiptContainer
-                ->getReceipt()
-                ->getFieldByType(AppReceiptField::TYPE__REQUEST_DATE)
-                ->getValue()
-            ;
-        }
 
         if (empty($signedAt)) {
             return false;
