@@ -206,7 +206,7 @@ final class AppStoreServerAPIReceiptExtender implements ReceiptExtenderInterface
                     continue;
                 }
 
-                $transaction = array_merge($transaction, $diff);
+                $transaction = array_merge($diff, $transaction);
                 $updated[$subject] = true;
                 break;
             }
