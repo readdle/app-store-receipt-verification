@@ -12,6 +12,7 @@ final class ASN1ValueLength
     const IS_RESERVED = 0b11111111;
     const SHORT_FORM_MAX = 0b01111111;
 
+    private bool $isIndefinite = false;
     private int $ownLength = 1;
     private int $value;
 
@@ -20,7 +21,9 @@ final class ASN1ValueLength
         $octet = $bufferReader->readOrdinal();
 
         if ($octet === self::IS_INDEFINITE) {
-            throw new UnexpectedValueException('ASN.1 indefinite form length is not supported (yet?)');
+            $this->isIndefinite = true;
+            $this->value = 0;
+            return;
         }
 
         if ($octet === self::IS_RESERVED) {
@@ -40,6 +43,11 @@ final class ASN1ValueLength
             $octet = $bufferReader->readOrdinal();
             $this->value = $this->value * 256 + $octet;
         }
+    }
+
+    public function isIndefinite(): bool
+    {
+        return $this->isIndefinite;
     }
 
     public function getOwnLength(): int

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Readdle\AppStoreReceiptVerification;
 
+use Exception;
 use InvalidArgumentException;
 use Readdle\AppStoreReceiptVerification\ASN1\AbstractASN1Object;
 use Readdle\AppStoreReceiptVerification\PKCS7\AppStore\AppReceipt;
@@ -19,6 +20,9 @@ final class ReceiptContainer
     private SignedData $signedData;
     private AppReceipt $receipt;
 
+    /**
+     * @throws Exception
+     */
     public function __construct(string $binaryData)
     {
         $bufferReader = new BufferReader(new Buffer($binaryData));

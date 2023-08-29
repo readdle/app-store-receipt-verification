@@ -42,7 +42,7 @@ final class Name extends AbstractPKCS7Object
             self::assertASNIdentifierType($attributeTypeAndDistinguishedValue, 'Sequence');
             self::assertASNChildrenStruct($attributeTypeAndDistinguishedValue, [
                 'Object Identifier',
-                'Printable String|UTF8 String',
+                'Printable String|UTF8 String|IA5 String',
             ]);
             [$type, $value] = $attributeTypeAndDistinguishedValue->getValue();
             $attributes[$type->getValue()] = $value->getValue();

@@ -15,16 +15,17 @@ final class AppStoreReceiptVerificationTest extends TestCase
     {
         $pathToSamples = join(DIRECTORY_SEPARATOR, [__DIR__, '..', 'samples']);
         $certificate = Utils::DER2PEM(file_get_contents('https://www.apple.com/appleca/AppleIncRootCertificate.cer'));
+        $filesList = glob($pathToSamples . DIRECTORY_SEPARATOR . 'receipt?*.base64.txt');
 
-        foreach (glob($pathToSamples . DIRECTORY_SEPARATOR . 'receipt?*.base64.txt') as $fullPath) {
-            $filename = basename($fullPath);
+        foreach ($filesList as $file) {
+            $filename = basename($file);
 
             if (!preg_match('/receipt(\d+)\.base64\.txt/', $filename, $m)) {
                 continue;
             }
 
-            $base64 = file_get_contents($fullPath);
-            // AppStoreReceiptVerification::devMode();
+            $base64 = file_get_contents($file);
+            AppStoreReceiptVerification::devMode();
             ob_start();
 
             try {
@@ -37,7 +38,7 @@ final class AppStoreReceiptVerificationTest extends TestCase
                 $this->fail("[$filename]: {$e->getMessage()}");
             }
 
-            file_put_contents($pathToSamples . DIRECTORY_SEPARATOR . "receipt{$m[1]}.json", ob_get_clean());
+            file_put_contents($pathToSamples . DIRECTORY_SEPARATOR . "receipt$m[1].json", ob_get_clean());
             ob_start();
 
             echo json_encode(

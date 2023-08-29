@@ -4,7 +4,7 @@ This is a ***zero-dependencies\* pure PHP*** App Store receipt verification libr
 
 However, the bridge to `App Store Server API` is implemented as well, so it's possible to go event further and extend receipt data using API.
 
-<sub>* Zero-dependencies means that this library doesn't rely on any third-party library. Ath the same time this library relies on such an essential PHP extensions as `json`, `openssl` and either `bcmath` or `gmp`</sub>
+<sub>* Zero-dependencies means that this library doesn't rely on any third-party library. At the same time this library relies on such an essential PHP extensions as `json` and `openssl`</sub>
 
 # Installation
 
@@ -17,9 +17,13 @@ Nothing special here, just use composer to install the package:
 Parse base64-encoded receipt data and verify it was signed by Apple root certificate:
 
 ```
+$appleIncRootCertificate = \Readdle\AppStoreReceiptVerification\Utils::DER2PEM(
+    file_get_contents('https://www.apple.com/appleca/AppleIncRootCertificate.cer')
+);
+
 $serializedReceipt = \Readdle\AppStoreReceiptVerification\AppStoreReceiptVerification::verifyReceipt(
     $receiptData,
-    Utils::DER2PEM(file_get_contents('https://www.apple.com/appleca/AppleIncRootCertificate.cer'))
+    $appleIncRootCertificate
 );
 ```
 
@@ -34,7 +38,7 @@ try {
         'ABC1234DEF',
         "-----BEGIN PRIVATE KEY-----\n<base64-encoded private key goes here>\n-----END PRIVATE KEY-----"
     );
-} catch (WrongEnvironmentException $e) {
+} catch (\Readdle\AppStoreServerAPI\Exception\WrongEnvironmentException $e) {
     exit($e->getMessage());
 }
 
@@ -43,10 +47,14 @@ $mergeNewEntries = true;
 
 try {
     $extendedReceipt = $receiptExtender->extend($serializedReceipt, $mergeNewEntries);
-} catch (Exception $e) {
+} catch (\Exception $e) {
     exit($e->getMessage());
 }
 ```
+
+# StoreKit receipts
+
+Since version 1.4.0 `StoreKit` receipts are also supported. Such receipts contain very limited amount of data if compare to sandbox/production receipts, and **they could be verified in dev mode (see below) ONLY** (because of absence of certificates chain).
 
 # About the content of receipts
 
@@ -55,18 +63,18 @@ Unfortunately, App Store receipts doesn't contain all the information returned b
 At the same time they contain some extra fields which are, probably, not so useful, but as they are there anyway, you'll get them in the result set as well.
 
 The list of missing fields in app receipt:
-- adam_id
+- `adam_id`
 
 The list of missing fields in in-app purchase receipt:
-- app_account_token
-- in_app_ownership_type
-- offer_code_ref_name
-- subscription_group_identifier
+- `app_account_token`
+- `in_app_ownership_type`
+- `offer_code_ref_name`
+- `subscription_group_identifier`
 
 The list of extra fields in app receipt:
-- age_rating
-- opaque_value
-- sha1_hash
+- `age_rating`
+- `opaque_value`
+- `sha1_hash`
 
 # Extending receipts
 

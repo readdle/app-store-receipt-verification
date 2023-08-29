@@ -5,44 +5,63 @@ namespace Readdle\AppStoreReceiptVerification\ASN1\Universal;
 
 use Exception;
 use Readdle\AppStoreReceiptVerification\ASN1\AbstractASN1Object;
-use Readdle\AppStoreReceiptVerification\Math;
 
-use function array_reverse;
-use function chunk_split;
+use function array_map;
 use function count;
 use function dechex;
+use function floor;
 use function join;
 use function ord;
-use function strlen;
+use function str_pad;
+use function str_split;
 use function strtoupper;
-use function trim;
+
+use const STR_PAD_LEFT;
 
 final class Integer extends AbstractASN1Object
 {
-    protected string $value;
+    protected string $decValue;
+    protected string $hexValue;
 
     /**
      * @throws Exception
      */
     protected function setValue($value): void
     {
-        $length = strlen($value);
+        $hexParts = array_map(
+            fn ($chr) => strtoupper(str_pad(dechex(ord($chr)), 2, '0', STR_PAD_LEFT)),
+            str_split($value)
+        );
+        $this->hexValue = join(' ', $hexParts);
 
-        if ($length === 1) {
-            $this->value = (string) ord($value);
-            return;
-        }
+        /** @noinspection SpellCheckingInspection */
+        $decParts = array_map('hexdec', str_split(join($hexParts)));
+        $length = count($hexParts) * 2;
+        $this->decValue = '';
 
-        $this->value = '0';
+        do {
+            $div = 0;
+            $newLength = 0;
 
-        for ($i = 0; $i < strlen($value); $i++) {
-            $this->value = Math::add(Math::mul($this->value, '256'), (string) ord($value[$i]));
-        }
+            for ($i = 0; $i < $length; $i++) {
+                $div = $div * 16 + (int) $decParts[$i];
+
+                if ($div >= 10) {
+                    $decParts[$newLength++] = floor($div / 10);
+                    $div = $div % 10;
+                } elseif ($newLength > 0) {
+                    $decParts[$newLength++] = 0;
+                }
+            }
+
+            $length = $newLength;
+            $this->decValue = $div . $this->decValue;
+        } while ($newLength != 0);
     }
 
     public function getValue(): string
     {
-        return $this->value;
+        return $this->decValue;
     }
 
     public function getIntValue(): int
@@ -55,28 +74,11 @@ final class Integer extends AbstractASN1Object
      */
     public function getHexValue(): string
     {
-        $int = $this->getValue();
-
-        if ($int === '0') {
-            return '00';
-        }
-
-        $hex = [];
-
-        while ($int != '0') {
-            $hex[] = strtoupper(dechex((int) Math::mod($int, '16')));
-            $int = Math::div($int, '16');
-        }
-
-        if (count($hex) % 2) {
-            $hex[] = 0;
-        }
-
-        return trim(chunk_split(join(array_reverse($hex)), 2, ' '));
+        return $this->hexValue;
     }
 
     public function jsonSerialize(): string
     {
-        return $this->value;
+        return $this->decValue;
     }
 }

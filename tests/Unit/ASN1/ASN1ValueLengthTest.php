@@ -17,13 +17,6 @@ final class ASN1ValueLengthTest extends UnitTestCase
         new ASN1ValueLength($this->createBufferReader(''));
     }
 
-    public function testExceptionOnLongForm(): void
-    {
-        $this->expectException(UnexpectedValueException::class);
-        $this->expectExceptionMessage('ASN.1 indefinite form length is not supported (yet?)');
-        new ASN1ValueLength($this->createBufferReader(ASN1ValueLength::SHORT_FORM_MAX + 1));
-    }
-
     public function testExceptionOnReserved(): void
     {
         $this->expectException(UnexpectedValueException::class);
@@ -37,6 +30,7 @@ final class ASN1ValueLengthTest extends UnitTestCase
             $length = new ASN1ValueLength($this->createBufferReader($lengthValue));
             $this->assertEquals($lengthValue, $length->getValueLength());
             $this->assertEquals(1, $length->getOwnLength());
+            $this->assertFalse($length->isIndefinite());
         }
     }
 
@@ -51,6 +45,15 @@ final class ASN1ValueLengthTest extends UnitTestCase
             $length = new ASN1ValueLength($this->createBufferReader($lengthBytes));
             $this->assertEquals($value, $length->getValueLength());
             $this->assertEquals(count($lengthBytes), $length->getOwnLength());
+            $this->assertFalse($length->isIndefinite());
         }
+    }
+
+    public function testIndefiniteLength(): void
+    {
+        $length = new ASN1ValueLength($this->createBufferReader(ASN1ValueLength::IS_INDEFINITE));
+        $this->assertEquals(0, $length->getValueLength());
+        $this->assertEquals(1, $length->getOwnLength());
+        $this->assertTrue($length->isIndefinite());
     }
 }

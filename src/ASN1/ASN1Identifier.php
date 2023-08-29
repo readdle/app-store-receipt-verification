@@ -24,6 +24,7 @@ use function strtoupper;
 
 final class ASN1Identifier
 {
+    const TYPE__EOC = 0x00; // special type, means "End-of-contents", see X.690-0207 8.1.3
     const TYPE__BOOLEAN = 0x01;
     const TYPE__INTEGER = 0x02;
     const TYPE__BIT_STRING = 0x03;
@@ -83,6 +84,11 @@ final class ASN1Identifier
         if (($this->octet & self::IS_LONG_FORM) === self::IS_LONG_FORM) {
             throw new UnexpectedValueException('ASN.1 long form identifier are not supported (yet?)');
         }
+    }
+
+    public function isEOC(): bool
+    {
+        return $this->octet === self::TYPE__EOC;
     }
 
     public function isContextSpecific(): bool
