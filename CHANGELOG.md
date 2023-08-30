@@ -1,3 +1,9 @@
+### [1.4.2] 2023-08-30
+
+**BUGFIX:**
+
+- AppStoreServerAPIReceiptExtender: proper handling of 'unknown' subarray (in case of dev mode) added
+
 ### [1.4.1] 2023-08-30
 
 **BUGFIX:**

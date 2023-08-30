@@ -194,7 +194,14 @@ final class AppStoreServerAPIReceiptExtender implements ReceiptExtenderInterface
                     continue;
                 }
 
+                $unknown = $transaction['unknown'] ?? null;
+                unset($transaction['unknown']);
+
                 $diff = array_diff($apiTransactionInfo, $transaction);
+
+                if ($unknown !== null) {
+                    $transaction['unknown'] = $unknown;
+                }
 
                 if (!$diff) {
                     continue;
