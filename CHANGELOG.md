@@ -1,3 +1,9 @@
+### [1.4.1] 2023-08-30
+
+**BUGFIX:**
+
+- Let AppStoreServerAPIReceiptExtender throw AppStoreServerAPIException to allow its proper handling
+
 ### [1.4.0] 2023-08-29
 
 **IMPROVEMENTS:**

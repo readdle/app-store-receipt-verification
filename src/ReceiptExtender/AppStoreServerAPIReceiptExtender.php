@@ -7,7 +7,6 @@ use DateTime;
 use DateTimeZone;
 use Exception;
 use Readdle\AppStoreServerAPI\AppStoreServerAPIInterface;
-use Readdle\AppStoreServerAPI\Exception\AppStoreServerAPIException;
 use Readdle\AppStoreServerAPI\TransactionInfo;
 
 final class AppStoreServerAPIReceiptExtender implements ReceiptExtenderInterface
@@ -32,12 +31,7 @@ final class AppStoreServerAPIReceiptExtender implements ReceiptExtenderInterface
 
         $originalTransactionId = $receipt['receipt']['in_app'][0]['original_transaction_id'];
 
-        try {
-            $transactionHistory = $this->api->getTransactionHistory($originalTransactionId);
-        } catch (AppStoreServerAPIException $e) {
-            throw new Exception('AppStoreServerAPIException: ' . $e->getMessage());
-        }
-
+        $transactionHistory = $this->api->getTransactionHistory($originalTransactionId);
         $transactionsMerged = false;
 
         foreach ($transactionHistory->getTransactions() as $transaction) {
