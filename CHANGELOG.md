@@ -1,3 +1,11 @@
+### [1.5.0] 2023-08-31
+
+**IMPROVEMENTS:**
+
+- AppStoreReceiptVerification: response composing refactored
+- `organization_display_name` VPP field added to the list of known receipt fields
+- AppStoreReceiptVerificationTest reorganized, `README` updated
+
 ### [1.4.2] 2023-08-30
 
 **BUGFIX:**

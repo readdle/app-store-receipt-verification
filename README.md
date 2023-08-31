@@ -52,9 +52,9 @@ try {
 }
 ```
 
-# StoreKit receipts
+# Self-signed StoreKit receipts
 
-Since version 1.4.0 `StoreKit` receipts are also supported. Such receipts contain very limited amount of data if compare to sandbox/production receipts, and **they could be verified in dev mode (see below) ONLY** (because of absence of certificates chain).
+Since version 1.4.0 self-signed `StoreKit` receipts are also supported. Note, that such receipts contain very limited amount of data if compare to sandbox/production receipts, and **they could NOT be verified, so parse them in dev mode (see below) ONLY**.
 
 # About the content of receipts
 
@@ -62,16 +62,15 @@ Unfortunately, App Store receipts doesn't contain all the information returned b
 
 At the same time they contain some extra fields which are, probably, not so useful, but as they are there anyway, you'll get them in the result set as well.
 
-The list of missing fields in app receipt:
-- `adam_id`
+The list of missing fields in the in-app purchase receipt:
 
-The list of missing fields in in-app purchase receipt:
 - `app_account_token`
 - `in_app_ownership_type`
 - `offer_code_ref_name`
 - `subscription_group_identifier`
 
-The list of extra fields in app receipt:
+The list of extra fields in the app receipt:
+
 - `age_rating`
 - `opaque_value`
 - `sha1_hash`
@@ -104,9 +103,30 @@ In case you know what does any of them mean, please, contact me, I will update t
 
 # Tests
 
-In `tests/` directory you can find some tests. I will try to improve test-coverage of this library in the future.
+In `tests/` directory you can find some tests.
 
-The most useful test for development purposes is `tests/Functional/AppStoreReceiptVerificationTest.php`. This test looks into `tests/samples/` directory searching for `receiptX.base64.txt` files (where X is any decimal number). All found receipts will be parsed and two new files will be created for each of them: `receiptX.json` with receipt json (the same as you get from `AppStoreReceipVerification::verifyReceipt()`) and `receiptX.dump.json` with dump of the whole PKCS#7 container.
+The most useful for you will be `tests/Functional/AppStoreReceiptVerificationTest.php`.
+
+This test looks into `tests/playground/` directory searching for four files (you don't have to create all four, just those which you need): `production.json`, `sandbox.json`, `xcode.json` and `unknown.json`. An expected structure of all of them is the same:
+
+```
+[
+    {
+        "name": "any name for your receipt",
+        "base64": "...base64-encoded receipt data..."
+    },
+    {
+        "name": "any name for your receipt",
+        "base64": "...base64-encoded receipt data..."
+    },
+    ...
+]
+```
+<sub>NOTE: each hash can contain any additional key/value pairs, these two are the only which are used</sub>
+
+Each file can contain as many entries as you want. Separation for `production`/`sandbox`/`xcode`/`unknown` is just to make management of test receipts a bit more convenient. However, there is a difference, `xcode` and `unknown` lists will be parsed in dev mode (because it's impossible to verify self-signed receipts, and `unknown`, as followed from its name, can contain self-signed receipts as well).
+
+This test will result in creation of `production.parsed.json`, `sandbox.parsed.json`, `xcode.parser.json` and `unknown.parsed.json`. Each of them will contain a hash, where a key will be the name of the receipt (`name` in source file OR `unknown_X` in case if `name` is omitted, where X is an index number of the receipt in source file) and the value will be parsed receipt data (the same as you get from `AppStoreReceipVerification::verifyReceipt()`).
 
 # External links
 

@@ -6,46 +6,59 @@ namespace Readdle\AppStoreReceiptVerification\Tests\Functional;
 use Exception;
 use PHPUnit\Framework\TestCase;
 use Readdle\AppStoreReceiptVerification\AppStoreReceiptVerification;
-use Readdle\AppStoreReceiptVerification\ReceiptContainer;
 use Readdle\AppStoreReceiptVerification\Utils;
 
 final class AppStoreReceiptVerificationTest extends TestCase
 {
     public function test(): void
     {
-        $pathToSamples = join(DIRECTORY_SEPARATOR, [__DIR__, '..', 'samples']);
+        $playgroundDir = join(DIRECTORY_SEPARATOR, [__DIR__, '..', 'playground']);
         $certificate = Utils::DER2PEM(file_get_contents('https://www.apple.com/appleca/AppleIncRootCertificate.cer'));
-        $filesList = glob($pathToSamples . DIRECTORY_SEPARATOR . 'receipt?*.base64.txt');
 
-        foreach ($filesList as $file) {
-            $filename = basename($file);
+        foreach (['production', 'sandbox', 'xcode', 'unknown'] as $receiptsListName) {
+            $basename = join(DIRECTORY_SEPARATOR, [$playgroundDir, $receiptsListName]);
+            $filename = realpath($basename . '.json');
 
-            if (!preg_match('/receipt(\d+)\.base64\.txt/', $filename, $m)) {
+            if (!file_exists($filename)) {
                 continue;
             }
 
-            $base64 = file_get_contents($file);
-            AppStoreReceiptVerification::devMode();
-            ob_start();
+            $receiptsListJson = file_get_contents($filename);
 
-            try {
-                echo json_encode(
-                    json_decode(AppStoreReceiptVerification::verifyReceipt($base64, $certificate), true),
-                    JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
-                );
-            } catch (Exception $e) {
-                ob_end_clean();
-                $this->fail("[$filename]: {$e->getMessage()}");
+            if (empty($receiptsListJson)) {
+                continue;
             }
 
-            file_put_contents($pathToSamples . DIRECTORY_SEPARATOR . "receipt$m[1].json", ob_get_clean());
-            ob_start();
+            $receiptsList = json_decode($receiptsListJson, true);
 
-            echo json_encode(
-                (new ReceiptContainer(base64_decode($base64)))->getContainer(),
-                JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                $this->fail(sprintf("Malformed JSON (%s) in '$filename'", json_last_error_msg()));
+            }
+
+            AppStoreReceiptVerification::devMode(in_array($receiptsListName, ['xcode', 'unknown']));
+            $parsedReceiptsList = [];
+
+            foreach ($receiptsList as $i => $receipt) {
+                $receiptName = $receipt['name'] ?? "unnamed_$i";
+
+                if (empty($receipt['base64'])) {
+                    $this->fail("Receipt '$receiptName' in list '$receiptsListName' does not contain 'base64' prop");
+                }
+
+                try {
+                    $parsedReceiptsList[$receiptName] = json_decode(AppStoreReceiptVerification::verifyReceipt(
+                        $receipt['base64'],
+                        $certificate
+                    ));
+                } catch (Exception $e) {
+                    $this->fail("[$filename]: {$e->getMessage()}");
+                }
+            }
+
+            file_put_contents(
+                $basename . '.parsed.json',
+                json_encode($parsedReceiptsList, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
             );
-            file_put_contents($pathToSamples . DIRECTORY_SEPARATOR . "receipt$m[1].dump.json", ob_get_clean());
         }
 
         $this->assertTrue(true);

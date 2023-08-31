@@ -13,7 +13,7 @@ final class AppStoreServerAPIReceiptExtenderTest extends TestCase
 {
     public function test(): void
     {
-        $credentialsFile = dirname(__DIR__, 2) . '/samples/credentials.json';
+        $credentialsFile = dirname(__DIR__, 2) . '/playground/credentials.json';
         $credentials = json_decode(file_get_contents($credentialsFile), true);
 
         if (
@@ -25,7 +25,7 @@ final class AppStoreServerAPIReceiptExtenderTest extends TestCase
             $this->fail("No credentials found in $credentialsFile");
         }
 
-        $receiptJson = file_get_contents(dirname(__DIR__, 2) . '/samples/receipt2.json');
+        $receiptJson = file_get_contents(dirname(__DIR__, 2) . '/playground/receipt2.json');
         $receipt = json_decode($receiptJson, true);
 
         try {

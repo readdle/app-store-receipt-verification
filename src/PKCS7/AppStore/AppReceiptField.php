@@ -25,6 +25,7 @@ final class AppReceiptField extends AbstractField
     const TYPE__ORIGINAL_PURCHASE_DATE = 18;
     const TYPE__ORIGINAL_APPLICATION_VERSION = 19;
     const TYPE__EXPIRATION_DATE = 21;
+    const TYPE__ORGANIZATION_DISPLAY_NAME = 23;
 
     protected const BINARY_TYPES = [
         self::TYPE__OPAQUE_VALUE,
@@ -57,5 +58,6 @@ final class AppReceiptField extends AbstractField
         self::TYPE__ORIGINAL_PURCHASE_DATE => 'original_purchase_date',
         self::TYPE__ORIGINAL_APPLICATION_VERSION => 'original_application_version',
         self::TYPE__EXPIRATION_DATE => 'expiration_date',
+        self::TYPE__ORGANIZATION_DISPLAY_NAME => 'organization_display_name',
     ];
 }
