@@ -46,10 +46,13 @@ final class AppStoreReceiptVerification
     public static function verifyReceipt(string $receiptData, string $trustedAppleRootCertificate): string
     {
         $receiptContainer = new ReceiptContainer(base64_decode($receiptData));
-        $receiptContainerVerifier = new ReceiptContainerVerifier($receiptContainer);
 
-        if (!self::$devMode && !$receiptContainerVerifier->verify($trustedAppleRootCertificate)) {
-            throw new Exception('Verification failed');
+        if (!self::$devMode) {
+            $receiptContainerVerifier = new ReceiptContainerVerifier($receiptContainer);
+
+            if (!$receiptContainerVerifier->verify($trustedAppleRootCertificate)) {
+                throw new Exception('Verification failed');
+            }
         }
 
         $receipt = self::composeReceipt($receiptContainer->getReceipt());

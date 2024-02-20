@@ -51,7 +51,7 @@ final class AppStoreReceiptVerificationTest extends TestCase
                         $certificate
                     ));
                 } catch (Exception $e) {
-                    $this->fail("[$filename]: {$e->getMessage()}");
+                    $this->fail("[$filename, $receiptName]: {$e->getMessage()}");
                 }
             }
 

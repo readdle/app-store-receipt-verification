@@ -1,10 +1,14 @@
 # About
 
-This is a ***zero-dependencies\* pure PHP*** App Store receipt verification library which allows to parse/validate/verify receipts without API calls to `App Store Server API`.
+This is a ***zero-dependencies\* pure PHP*** library that allows receipts parsing/validation/verification without API calls to the `App Store Server API`.
 
-However, the bridge to `App Store Server API` is implemented as well, so it's possible to go event further and extend receipt data using API.
+However, the bridge to the `App Store Server API` is also implemented, so it's possible to go even further and extend receipt data using the API.
 
-<sub>* Zero-dependencies means that this library doesn't rely on any third-party library. At the same time this library relies on such an essential PHP extensions as `json` and `openssl`</sub>
+<sub>* Zero-dependencies means this library doesn't rely on any third-party library. At the same time, this library relies on such essential PHP extensions as `json` and `openssl`</sub>
+
+> **NOTE**
+>
+> If you need to deal with the App Store Server API instead of (or additionally to) receipts parsing/verification, check out [this library](https://github.com/readdle/app-store-server-api).
 
 # Installation
 
@@ -27,7 +31,7 @@ $serializedReceipt = \Readdle\AppStoreReceiptVerification\AppStoreReceiptVerific
 );
 ```
 
-Extend receipt with latest info using the bridge to `readdle/app-store-server-api` package:
+Extend receipt with the latest info using the bridge to the `readdle/app-store-server-api` package:
 
 ```
 try {
@@ -54,13 +58,13 @@ try {
 
 # Self-signed StoreKit receipts
 
-Since version 1.4.0 self-signed `StoreKit` receipts are also supported. Note, that such receipts contain very limited amount of data if compare to sandbox/production receipts, and **they could NOT be verified, so parse them in dev mode (see below) ONLY**.
+Since version 1.4.0, self-signed `StoreKit` receipts have also been supported. Note that such receipts contain a very limited amount of data if compared to sandbox/production receipts, and **they could NOT be verified, so parse them in dev mode (see below) ONLY**.
 
 # About the content of receipts
 
-Unfortunately, App Store receipts doesn't contain all the information returned by deprecated `App Store Receipt Verification` API inside on them.
+Unfortunately, App Store receipts don’t contain all the information returned by the deprecated `App Store Receipt Verification` API inside them.
 
-At the same time they contain some extra fields which are, probably, not so useful, but as they are there anyway, you'll get them in the result set as well.
+At the same time, they contain some extra fields that are probably not so useful, but as they are there anyway, you'll get them in the result set as well.
 
 The list of missing fields in the in-app purchase receipt:
 
@@ -77,15 +81,15 @@ The list of extra fields in the app receipt:
 
 # Extending receipts
 
-A bit ~~funny~~ annoying but `App Store Server API` returns **NOT** as detailed set of information as you could find in the response of `App Store Receipt Verification` API ¯\_(ツ)_/¯
+A bit ~~funny~~ annoying, but the `App Store Server API` returns **NOT** as detailed set of information as you could find in the response of the `App Store Receipt Verification` API ¯\_(ツ)_/¯
 
-Thus, receipts extended with info from `App Store Server API` contains the most amount of information available.
+Thus, receipts extended with info from the `App Store Server API` contain the most information available.
 
 # Merging new entries in receipts
 
-The second argument of `$receiptExtender->extend()` methods is a boolean flag, indicating if you want to merge *new* entries into the `in_app`/`latest_receipt_info` arrays.
+The second argument of the `$receiptExtender->extend()` method is a boolean flag, indicating if you want to merge *new* entries into the `in_app`/`latest_receipt_info` arrays.
 
-*New* means those transactions which are not present in the receipt itself, but are available through API (for example, when you're dealing with outdated receipt).  Note, that in this case the set of information about each new transaction is limited to what is available from API.
+*New* means those transactions not present in the receipt itself but are available through the API (for example, when dealing with an outdated receipt).  In this case, the information set about each new transaction is limited to what is available from the API.
 
 # Dev mode
 
@@ -95,19 +99,19 @@ You can turn on dev mode using this call:
 \Readdle\AppStoreReceiptVerification\AppStoreReceiptVerification::devMode();
 ```
 
-In dev mode **no receipt container check will be performed**, so use it **ONLY** for development purposes or in tests.
+In dev mode, **no receipt container check will be performed**, so use it **ONLY** for development purposes or in tests.
 
-Additionally, in dev mode there will be property called `unknown` in both app and in-app purchase receipts. In this array you can find all unrecognized fields containing in binary receipt data.
+There will also be a property called `unknown` in both app and in-app purchase receipts. This property will contain all unrecognized fields found in the binary data.
 
-In case you know what does any of them mean, please, contact me, I will update the library :)
+In case you know what any of them mean, please get in touch with me, and I will update the library :)
 
 # Tests
 
-In `tests/` directory you can find some tests.
+In the `tests/` directory you can find some tests.
 
 The most useful for you will be `tests/Functional/AppStoreReceiptVerificationTest.php`.
 
-This test looks into `tests/playground/` directory searching for four files (you don't have to create all four, just those which you need): `production.json`, `sandbox.json`, `xcode.json` and `unknown.json`. An expected structure of all of them is the same:
+This test looks into the `tests/playground/` directory searching for four files (you don't have to create all four, just those which you need): `production.json`, `sandbox.json`, `xcode.json` and `unknown.json`. An expected structure of all of them is the same:
 
 ```
 [
@@ -122,11 +126,11 @@ This test looks into `tests/playground/` directory searching for four files (you
     ...
 ]
 ```
-<sub>NOTE: each hash can contain any additional key/value pairs, these two are the only which are used</sub>
+<sub>NOTE: each hash can contain any additional key/value pairs, these two are the only ones that are used</sub>
 
-Each file can contain as many entries as you want. Separation for `production`/`sandbox`/`xcode`/`unknown` is just to make management of test receipts a bit more convenient. However, there is a difference, `xcode` and `unknown` lists will be parsed in dev mode (because it's impossible to verify self-signed receipts, and `unknown`, as followed from its name, can contain self-signed receipts as well).
+Each file can contain as many entries as you want. Separation for `production`/`sandbox`/`xcode`/`unknown` is just to make the management of test receipts a bit more convenient. However, there is a difference, `xcode` and `unknown` lists will be parsed in dev mode (because it's impossible to verify self-signed receipts, and `unknown`, as followed by its name, can contain self-signed receipts as well).
 
-This test will result in creation of `production.parsed.json`, `sandbox.parsed.json`, `xcode.parser.json` and `unknown.parsed.json`. Each of them will contain a hash, where a key will be the name of the receipt (`name` in source file OR `unknown_X` in case if `name` is omitted, where X is an index number of the receipt in source file) and the value will be parsed receipt data (the same as you get from `AppStoreReceipVerification::verifyReceipt()`).
+This test will result in the creation of `production.parsed.json`, `sandbox.parsed.json`, `xcode.parser.json`, and `unknown.parsed.json`. Each of them will contain a hash, where a key will be the name of the receipt (`name` in the source file OR `unknown_X` in case `name` is omitted, where X is an index number of the receipt in the source file) and the value will be parsed receipt data (the same as you get from the `AppStoreReceipVerification::verifyReceipt()`).
 
 # External links
 
