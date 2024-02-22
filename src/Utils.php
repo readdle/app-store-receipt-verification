@@ -5,6 +5,7 @@ namespace Readdle\AppStoreReceiptVerification;
 
 use DateTime;
 use DateTimeZone;
+use Exception;
 use Readdle\AppStoreReceiptVerification\PKCS7\AppStore\AbstractField;
 
 use function base64_encode;
@@ -53,7 +54,12 @@ final class Utils
                     continue;
                 }
 
-                $dt = DateTime::createFromFormat('Y-m-d\TH:i:s\Z', $value);
+                try {
+                    $dt = new DateTime($value);
+                } catch (Exception $e) {
+                    continue;
+                }
+
                 $receipt[$type . '_ms'] = (string) ($dt->getTimestamp() * 1000);
 
                 $dt->setTimezone(new DateTimeZone('Etc/GMT'));

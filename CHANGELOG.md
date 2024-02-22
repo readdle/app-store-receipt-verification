@@ -1,3 +1,9 @@
+### [1.5.1] 2024-02-22
+
+**BUGFIX:**
+
+- `Utils::receiptJsonSerialize()`: DateTime field serialization fixed fix, handle possible exception in case of wrong format
+
 ### [1.5.0] 2023-08-31
 
 **IMPROVEMENTS:**
