@@ -15,6 +15,7 @@ use Readdle\AppStoreReceiptVerification\ASN1\Universal\Sequence;
 use Readdle\AppStoreReceiptVerification\ASN1\Universal\Set;
 use Readdle\AppStoreReceiptVerification\ASN1\Universal\UTCTime;
 use Readdle\AppStoreReceiptVerification\ASN1\Universal\UTF8String;
+use Readdle\AppStoreReceiptVerification\ASN1\Universal\VisibleString;
 use Readdle\AppStoreReceiptVerification\BufferReader;
 use UnexpectedValueException;
 
@@ -37,6 +38,7 @@ final class ASN1Identifier
     const TYPE__PRINTABLE_STRING = 0x13;
     const TYPE__IA5_STRING = 0x16;
     const TYPE__UTC_TIME = 0x17;
+    const TYPE__VISIBLE_STRING = 0x1A;
 
     const IS_CONTEXT_SPECIFIC = 0b10;
     const IS_CONSTRUCTED = 0b00100000;
@@ -55,6 +57,7 @@ final class ASN1Identifier
         self::TYPE__PRINTABLE_STRING => PrintableString::class,
         self::TYPE__IA5_STRING => IA5String::class,
         self::TYPE__UTC_TIME => UTCTime::class,
+        self::TYPE__VISIBLE_STRING => VisibleString::class,
     ];
 
     const TYPE_TO_STRING = [
@@ -70,6 +73,7 @@ final class ASN1Identifier
         self::TYPE__PRINTABLE_STRING => 'Printable String',
         self::TYPE__IA5_STRING => 'IA5 String',
         self::TYPE__UTC_TIME => 'UTC Time',
+        self::TYPE__VISIBLE_STRING => 'Visible String',
     ];
 
     private int $octet;
