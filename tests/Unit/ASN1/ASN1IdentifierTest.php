@@ -70,7 +70,7 @@ final class ASN1IdentifierTest extends UnitTestCase
             ));
             $this->assertEquals($type, $contextSpecificConstructed->getType());
             $this->assertEquals(
-                'Constructed Context-Specific 0x' . ucfirst(dechex($type)),
+                'Constructed Context-Specific 0x' . strtoupper(dechex($type)),
                 $contextSpecificConstructed->getTypeString()
             );
         }
