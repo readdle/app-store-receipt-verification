@@ -1,3 +1,9 @@
+### [1.6.0] 2024-04-16
+
+**IMPROVEMENTS:**
+
+- [PR-1](https://github.com/readdle/app-store-receipt-verification/pull/1): Added ASN.1 VisibleString type (kudos to @mgd-php)
+
 ### [1.5.1] 2024-02-22
 
 **BUGFIX:**
