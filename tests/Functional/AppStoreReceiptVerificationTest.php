@@ -7,6 +7,7 @@ use Exception;
 use PHPUnit\Framework\TestCase;
 use Readdle\AppStoreReceiptVerification\AppStoreReceiptVerification;
 use Readdle\AppStoreReceiptVerification\Utils;
+use Throwable;
 
 final class AppStoreReceiptVerificationTest extends TestCase
 {
@@ -50,8 +51,8 @@ final class AppStoreReceiptVerificationTest extends TestCase
                         $receipt['base64'],
                         $certificate
                     ));
-                } catch (Exception $e) {
-                    $this->fail("[$filename, $receiptName]: {$e->getMessage()}");
+                } catch (Throwable|Exception $e) {
+                    $this->fail("[$receiptsListName / $receiptName]: {$e->getMessage()}");
                 }
             }
 
