@@ -1,3 +1,9 @@
+### [1.6.1] 2024-07-14
+
+**IMPROVEMENTS:**
+
+- [ISSUE-4](https://github.com/readdle/app-store-receipt-verification/issues/4): `preorder_date` field added to the App Receipt (kudos to @noemi-salaun)
+
 ### [1.6.0] 2024-04-16
 
 **IMPROVEMENTS:**
