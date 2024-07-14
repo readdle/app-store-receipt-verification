@@ -36,8 +36,8 @@ final class AppStoreReceiptVerification
      * Verifies receipt container and returns serialized receipt
      *
      * @param string $receiptData The Base64-encoded receipt data
-     * @param string $trustedAppleRootCertificate Apple root certificate from trusted source (Apple website). Not used
-     * in dev mode
+     * @param string $trustedAppleRootCertificate Apple root certificate from trusted source (e.g. Apple website).
+     * Not used in dev mode
      *
      * @return string JSON representation of parsed receipt
      *
