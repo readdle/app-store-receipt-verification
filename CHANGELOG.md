@@ -1,3 +1,9 @@
+### [1.6.2] 2024-09-11
+
+**BUGFIX:**
+
+- `AppStoreServerAPIReceiptExtender::extendReceiptTransactionInfo()`: fixed merging of transaction data
+
 ### [1.6.1] 2024-07-14
 
 **IMPROVEMENTS:**
