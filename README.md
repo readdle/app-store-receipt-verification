@@ -14,7 +14,7 @@ However, the bridge to the `App Store Server API` is also implemented, so it's p
 
 Nothing special here, just use composer to install the package:
 
-> composer install readdle/app-store-receipt-verification
+> composer require readdle/app-store-receipt-verification
 
 # Usage
 
