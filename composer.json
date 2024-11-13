@@ -23,7 +23,7 @@
     "php"
   ],
   "homepage": "https://github.com/readdle/app-store-receipt-verification",
-  "version": "1.6.2",
+  "version": "1.7.0",
   "autoload": {
     "psr-4": {
       "Readdle\\AppStoreReceiptVerification\\": "src/"

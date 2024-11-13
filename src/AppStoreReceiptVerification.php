@@ -117,10 +117,7 @@ final class AppStoreReceiptVerification
         ];
 
         if (!empty($receipt['in_app'])) {
-            if ($environment !== 'Xcode') {
-                $response['latest_receipt'] = trim($receiptData);
-            }
-
+            $response['latest_receipt'] = trim($receiptData);
             $response['latest_receipt_info'] = array_reverse($receipt['in_app']);
             $response['pending_renewal_info'] = [];
         }

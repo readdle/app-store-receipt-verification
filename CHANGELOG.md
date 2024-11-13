@@ -1,3 +1,9 @@
+### [1.7.0] 2024-11-13
+
+**IMPROVEMENT:**
+
+- `latest_receipt` field is now added to Xcode receipts as well (there was an exception for Xcode receipts previously)
+
 ### [1.6.2] 2024-09-11
 
 **BUGFIX:**
