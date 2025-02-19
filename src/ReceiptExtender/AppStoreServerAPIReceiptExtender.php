@@ -51,9 +51,17 @@ final class AppStoreServerAPIReceiptExtender implements ReceiptExtenderInterface
         $subscriptionGroupIdentifierItems = $this->api->getAllSubscriptionStatuses($originalTransactionId)->getData();
 
         foreach ($subscriptionGroupIdentifierItems as $subscriptionGroupIdentifierItem) {
-            $receipt['pending_renewal_info'][] = self::renewalInfoToPendingRenewalInfo(
-                $subscriptionGroupIdentifierItem->getLastTransactions()[0]->getRenewalInfo()->jsonSerialize()
-            );
+            $addedOriginalTransactionIds = [];
+
+            foreach ($subscriptionGroupIdentifierItem->getLastTransactions() as $transaction) {
+                if (in_array($transaction->getOriginalTransactionId(), $addedOriginalTransactionIds)) {
+                    continue;
+                }
+
+                $renewalInfo = $transaction->getRenewalInfo()->jsonSerialize();
+                $receipt['pending_renewal_info'][] = self::renewalInfoToPendingRenewalInfo($renewalInfo);
+                $addedOriginalTransactionIds[] = $transaction->getOriginalTransactionId();
+            }
         }
 
         return json_encode($receipt);
