@@ -1,3 +1,9 @@
+### [1.7.1] 2025-02-19
+
+**BUGFIX:**
+
+- `pending_renewal_info` is now populated from ALL transactions of each subscription group, not only from the first one as it was previously
+
 ### [1.7.0] 2024-11-13
 
 **IMPROVEMENT:**
