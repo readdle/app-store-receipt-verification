@@ -1,3 +1,9 @@
+### [1.8.0] 2025-03-24
+
+**IMPROVEMENT:**
+
+- Introduced support of [GMP](https://www.php.net/manual/en/book.gmp.php) and [BCMath](https://www.php.net/manual/en/book.bc.php) PHP extensions. Library auto-detects if one of them is installed (preference to GMP). It continues to use native implementation if no extension found. Also, you can choose which one to use manually.
+
 ### [1.7.1] 2025-02-19
 
 **BUGFIX:**

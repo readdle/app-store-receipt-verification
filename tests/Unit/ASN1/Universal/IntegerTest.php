@@ -6,6 +6,10 @@ namespace Readdle\AppStoreReceiptVerification\Tests\Unit\ASN1\Universal;
 use Exception;
 use Readdle\AppStoreReceiptVerification\ASN1\ASN1Identifier;
 use Readdle\AppStoreReceiptVerification\ASN1\Universal\Integer;
+use Readdle\AppStoreReceiptVerification\Math\BigInteger;
+use Readdle\AppStoreReceiptVerification\Math\BigInteger\BcmathConverter;
+use Readdle\AppStoreReceiptVerification\Math\BigInteger\GmpConverter;
+use Readdle\AppStoreReceiptVerification\Math\BigInteger\NativeConverter;
 use Readdle\AppStoreReceiptVerification\Tests\Unit\Traits\AsBinaryTestTrait;
 use Readdle\AppStoreReceiptVerification\Tests\Unit\UnitTestCase;
 
@@ -59,7 +63,7 @@ final class IntegerTest extends UnitTestCase
         $this->assertEquals(65535, $i65535->getIntValue());
         $this->assertEquals('65535', $i65535->getValue());
         $this->assertEquals('65535', $i65535->jsonSerialize());
-        $this->assertEquals('FF FF', $i65535->getHexValue());
+        $this->assertEquals('FFFF', $i65535->getHexValue());
     }
 
     public function testBigNumbers(): void
@@ -120,8 +124,14 @@ final class IntegerTest extends UnitTestCase
             ],
         ];
 
-        foreach ($bigIntegers as $string => $binary) {
-            $this->assertEquals($string, $this->createASN1Object(ASN1Identifier::TYPE__INTEGER, $binary)->getValue());
+        $converters = [NativeConverter::class, GmpConverter::class, BcmathConverter::class];
+
+        foreach ($converters as $converter) {
+            BigInteger::setConverter(new $converter());
+
+            foreach ($bigIntegers as $string => $binary) {
+                $this->assertEquals($string, $this->createASN1Object(ASN1Identifier::TYPE__INTEGER, $binary)->getValue());
+            }
         }
     }
 
