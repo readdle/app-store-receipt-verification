@@ -14,7 +14,7 @@ use function openssl_x509_verify;
 use const OPENSSL_ALGO_SHA1;
 use const OPENSSL_ALGO_SHA256;
 
-final class ReceiptContainerVerifier
+final class ReceiptContainerVerifier implements ReceiptContainerVerifierInterface
 {
     private ReceiptContainer $receiptContainer;
 

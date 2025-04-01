@@ -1,3 +1,9 @@
+### [1.8.2] 2025-04-01
+
+**IMPROVEMENTS:**
+
+- Interfaces `ReceiptContainerInterface` and `ReceiptContainerVerifierInterface` introduced, so that anyone who uses this library could mock these classes and test their code
+
 ### [1.8.1] 2025-04-01
 
 **IMPROVEMENTS:**

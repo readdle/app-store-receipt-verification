@@ -11,9 +11,8 @@ use Readdle\AppStoreReceiptVerification\PKCS7\ContentInfo;
 use Readdle\AppStoreReceiptVerification\PKCS7\Data;
 use Readdle\AppStoreReceiptVerification\PKCS7\SignedData;
 use Readdle\AppStoreReceiptVerification\PKCS7\SignerInfo;
-use Readdle\AppStoreReceiptVerification\PKCS7\X509\SignedCertificate;
 
-final class ReceiptContainer
+final class ReceiptContainer implements ReceiptContainerInterface
 {
     private const EXPECTED_CONTENT_TYPE = ObjectIdentifierTree::PKCS7__SIGNED_DATA;
 
@@ -62,9 +61,6 @@ final class ReceiptContainer
         return $this->receipt;
     }
 
-    /**
-     * @return array<SignedCertificate>
-     */
     public function getSignedCertificates(): array
     {
         return $this->signedData->getCertificateSet()->getSignedCertificates();
