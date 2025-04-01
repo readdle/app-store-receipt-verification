@@ -1,3 +1,9 @@
+### [1.8.1] 2025-04-01
+
+**IMPROVEMENTS:**
+
+- `AppStoreResponseComposer` class introduced and everything related to serialization of decoded receipt to `verifyReceipt`-compatible format moved to that class
+
 ### [1.8.0] 2025-03-24
 
 **IMPROVEMENT:**

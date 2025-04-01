@@ -4,8 +4,6 @@ declare(strict_types=1);
 namespace Readdle\AppStoreReceiptVerification;
 
 use Exception;
-use Readdle\AppStoreReceiptVerification\PKCS7\AppStore\AppReceipt;
-use Readdle\AppStoreReceiptVerification\PKCS7\AppStore\InAppPurchaseReceipt;
 
 final class AppStoreReceiptVerification
 {
@@ -55,73 +53,8 @@ final class AppStoreReceiptVerification
             }
         }
 
-        $receipt = self::composeReceipt($receiptContainer->getReceipt());
+        $receipt = AppStoreResponseComposer::serializeReceipt($receiptContainer->getReceipt(), self::$devMode);
 
-        return json_encode(self::composeReceiptResponse($receipt, $receiptData));
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    private static function composeReceipt(AppReceipt $appReceipt): array
-    {
-        $receipt = Utils::receiptJsonSerialize($appReceipt->getFields(), self::$devMode);
-
-        if (!empty($receipt['app_item_id'])) {
-            $receipt['adam_id'] = $receipt['app_item_id'];
-        }
-
-        $receipt['in_app'] = array_map(
-            fn (InAppPurchaseReceipt $inAppReceipt) => Utils::receiptJsonSerialize(
-                $inAppReceipt->getFields(),
-                self::$devMode
-            ),
-            $appReceipt->getInAppReceipts()
-        );
-        usort($receipt['in_app'], fn ($r1, $r2) => $r1['purchase_date_ms'] <=> $r2['purchase_date_ms']);
-
-        return $receipt;
-    }
-
-    private static function getEnvironmentFromReceiptType(string $receiptType): string
-    {
-        switch ($receiptType) {
-            case 'Production':
-            case 'ProductionVPP':
-                return 'Production';
-
-            case 'ProductionSandbox':
-            case 'ProductionVPPSandbox':
-                return 'Sandbox';
-
-            case 'Xcode':
-                return 'Xcode';
-
-            default:
-                return '[unknown]';
-        }
-    }
-
-    /**
-     * @param array<string, mixed> $receipt
-     * @return array<string, mixed>
-     */
-    private static function composeReceiptResponse(array $receipt, string $receiptData): array
-    {
-        $environment = self::getEnvironmentFromReceiptType($receipt['receipt_type']);
-
-        $response = [
-            'status' => 0,
-            'environment' => $environment,
-            'receipt' => $receipt,
-        ];
-
-        if (!empty($receipt['in_app'])) {
-            $response['latest_receipt'] = trim($receiptData);
-            $response['latest_receipt_info'] = array_reverse($receipt['in_app']);
-            $response['pending_renewal_info'] = [];
-        }
-
-        return $response;
+        return json_encode(AppStoreResponseComposer::serializeVerifyEndpointResponse($receipt, $receiptData));
     }
 }
