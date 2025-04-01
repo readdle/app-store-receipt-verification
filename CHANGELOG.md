@@ -1,3 +1,9 @@
+### [1.8.3] 2025-04-01
+
+**IMPROVEMENTS:**
+
+- `ReceiptContainerVerifier` now expects a container that implements `ReceiptContainerInterface` interface (instead of concrete `ReceiptContainer` implementation)
+
 ### [1.8.2] 2025-04-01
 
 **IMPROVEMENTS:**

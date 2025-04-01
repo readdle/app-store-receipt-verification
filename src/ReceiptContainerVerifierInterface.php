@@ -5,7 +5,7 @@ namespace Readdle\AppStoreReceiptVerification;
 
 interface ReceiptContainerVerifierInterface
 {
-    public function __construct(ReceiptContainer $receiptContainer);
+    public function __construct(ReceiptContainerInterface $receiptContainer);
 
     public function verify(string $trustedAppleRootCertificate): bool;
 }

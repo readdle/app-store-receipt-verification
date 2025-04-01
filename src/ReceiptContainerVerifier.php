@@ -18,7 +18,7 @@ final class ReceiptContainerVerifier implements ReceiptContainerVerifierInterfac
 {
     private ReceiptContainer $receiptContainer;
 
-    public function __construct(ReceiptContainer $receiptContainer)
+    public function __construct(ReceiptContainerInterface $receiptContainer)
     {
         $this->receiptContainer = $receiptContainer;
     }
