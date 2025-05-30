@@ -20,7 +20,7 @@ Nothing special here, just use composer to install the package:
 
 Parse base64-encoded receipt data and verify it was signed by Apple root certificate:
 
-```
+```php
 $appleIncRootCertificate = \Readdle\AppStoreReceiptVerification\Utils::DER2PEM(
     file_get_contents('https://www.apple.com/appleca/AppleIncRootCertificate.cer')
 );
@@ -33,7 +33,7 @@ $serializedReceipt = \Readdle\AppStoreReceiptVerification\AppStoreReceiptVerific
 
 Extend receipt with the latest info using the bridge to the `readdle/app-store-server-api` package:
 
-```
+```php
 try {
     $serverApi = new \Readdle\AppStoreServerAPI\AppStoreServerAPI(
         'Production',
