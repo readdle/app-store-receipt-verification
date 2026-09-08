@@ -6,6 +6,10 @@ However, the bridge to the `App Store Server API` is also implemented, so it's p
 
 <sub>* Zero-dependencies means this library doesn't rely on any third-party library. At the same time, this library relies on such essential PHP extensions as `json` and `openssl`</sub>
 
+> **WARNING**
+>
+> This library is **not maintained** with regard to `StoreKit 2`. It only supports the legacy `App Receipt` format (the base64-encoded PKCS#7 blob returned by `StoreKit 1` / `SKReceiptRefreshRequest`). Apps built against `StoreKit 2` no longer generate this format by default and should rely on JWS-signed transactions instead.
+
 > **NOTE**
 >
 > If you need to deal with the App Store Server API instead of (or additionally to) receipts parsing/verification, check out [this library](https://github.com/readdle/app-store-server-api).
@@ -20,7 +24,7 @@ Nothing special here, just use composer to install the package:
 
 Parse base64-encoded receipt data and verify it was signed by Apple root certificate:
 
-```
+```php
 $appleIncRootCertificate = \Readdle\AppStoreReceiptVerification\Utils::DER2PEM(
     file_get_contents('https://www.apple.com/appleca/AppleIncRootCertificate.cer')
 );
@@ -33,7 +37,7 @@ $serializedReceipt = \Readdle\AppStoreReceiptVerification\AppStoreReceiptVerific
 
 Extend receipt with the latest info using the bridge to the `readdle/app-store-server-api` package:
 
-```
+```php
 try {
     $serverApi = new \Readdle\AppStoreServerAPI\AppStoreServerAPI(
         'Production',
