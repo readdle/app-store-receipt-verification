@@ -109,10 +109,6 @@ final class ReceiptContainerVerifier implements ReceiptContainerVerifierInterfac
 
     private function verifyRootCertificate(string $trustedAppleRootCertificate): bool
     {
-        // openssl_x509_verify() only proves certs[2] was SIGNED BY the trusted root - it does
-        // not prove certs[2] IS the trusted root. Apple WWDR is also signed by the Apple root,
-        // so a signed-by check alone lets an attacker shift a forged chain up one level and
-        // present WWDR in the root's place. Compare identity (fingerprint) instead.
         $topCertificateFingerprint = openssl_x509_fingerprint(
             $this->receiptContainer->getSignedCertificates()[2]->getPEM(),
             'sha256'
@@ -137,9 +133,6 @@ final class ReceiptContainerVerifier implements ReceiptContainerVerifierInterfac
         foreach ($this->receiptContainer->getSignedCertificates() as $signedCertificate) {
             $certificate = $signedCertificate->getCertificate();
 
-            // Matching by serial number alone ignores the issuer, even though the field is
-            // called IssuerAndSerialNumber. Serial numbers are only required to be unique
-            // per issuer, so both must match to unambiguously identify the signer.
             if ($serialNumber === $certificate->getSerialNumber() && $this->namesMatch($issuer, $certificate->getIssuer())) {
                 $signerCertificate = $signedCertificate;
                 break;

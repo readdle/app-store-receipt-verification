@@ -8,7 +8,7 @@ However, the bridge to the `App Store Server API` is also implemented, so it's p
 
 > **WARNING**
 >
-> This library is **not maintained** with regard to `StoreKit 2`. It only supports the legacy `App Receipt` format (the base64-encoded PKCS#7 blob returned by `StoreKit 1` / `SKReceiptRefreshRequest`). Apps built against `StoreKit 2` no longer generate this format by default and should rely on JWS-signed transactions instead.
+> This library is **not under active development** with regard to `StoreKit 2` and may receive only security fixes or other patches of similar importance. It only supports the legacy `App Receipt` format (the base64-encoded PKCS#7 blob returned by `StoreKit 1` / `SKReceiptRefreshRequest`). Apps built against `StoreKit 2` no longer generate this format by default and should rely on JWS-signed transactions instead. Thus, please don't submit PRs with coding-style fixes or anything similar, they won't be reviewed.
 
 > **NOTE**
 >
