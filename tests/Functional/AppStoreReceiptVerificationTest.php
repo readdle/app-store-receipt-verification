@@ -20,7 +20,7 @@ final class AppStoreReceiptVerificationTest extends TestCase
             $basename = join(DIRECTORY_SEPARATOR, [$playgroundDir, $receiptsListName]);
             $filename = realpath($basename . '.json');
 
-            if (!file_exists($filename)) {
+            if (!$filename || !file_exists($filename)) {
                 continue;
             }
 

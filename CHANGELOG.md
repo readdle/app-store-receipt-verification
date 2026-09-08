@@ -1,3 +1,9 @@
+### [1.8.4] 2026-09-02
+
+**SECURITY FIX:**
+
+- `ReceiptContainerVerifier` relied on `openssl_x509_verify()` alone to validate the certificate chain, which only checks a signature and never confirmed a certificate was actually entitled to act as a CA (`basicConstraints`/`keyUsage`), nor that the top of the chain was the pinned Apple root rather than merely signed by it. This allowed a forged receipt chain shifted up one level (e.g. `[forgedLeaf, aDeveloperCert, WWDR]`) to be accepted as genuine. Fixed by requiring `CA:TRUE` + `keyCertSign` on every issuer in the chain, comparing the top certificate against the trusted root by fingerprint instead of by signature, and matching the receipt's signer certificate by issuer *and* serial number instead of serial number alone.
+
 ### [1.8.3] 2025-04-01
 
 **IMPROVEMENTS:**
